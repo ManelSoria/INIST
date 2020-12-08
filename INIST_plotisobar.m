@@ -14,7 +14,7 @@ global IND
 
 try
     if isempty(IND) || ~isfield(IND,dat)  
-        set = load('IND',dat);
+        set = load(dat);
         IND.(dat) = set.(dat);
     end
 catch

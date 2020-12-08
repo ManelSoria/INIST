@@ -12,14 +12,14 @@
 
 species = {'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6' 'C2H4'...
     'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14' 'C6H12' 'C6H6' 'NH3'...
-    'He' 'O2'};
+    'He' 'O2' 'R134a'};
 MM = [0.018 0.024 0.002 0.028 0.044 0.044 0.032 0.016 0.030 0.028 ...
     0.044 0.042 0.040 0.058 0.072 0.086 0.084 0.078 0.017 ...
-    0.004 0.032];
+    0.004 0.032 0.10203];
 idcas = {'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
-    'C7440597' 'C7782447'};
+    'C7440597' 'C7782447' 'C811972'};
 
 
 % This function takes as an input an existing database entry (e.g. IND.He)
@@ -34,6 +34,7 @@ tinc = 2;
 tmax = 5000;
 tmin = 0;
 s_Type = 'isoBar';
+
 %New isobars
 isobars1 = 0.001:0.001:0.01;
 isobars2 = 0.02:0.01:0.1;
@@ -41,14 +42,13 @@ isobars3 = 0.2:0.1:10;
 isobars4 = 10.5:0.5:100;
 isobars5 = 101:1:250;
 isobars = [isobars1 isobars2 isobars3 isobars4 isobars5];
-%  isobars = 0:5:250;
 
 % Saturated
 Tinc = 1;
 Tmin = 0;
 Tmax = 10000;
 s_Type1 = 'SatP';
-% load('IND_Try')
+
 
 
 for ii=1:length(species)
@@ -81,9 +81,14 @@ for ii=1:length(species)
         IND.(species{ii}) = parseTableIsobaric(IND.(species{ii}), jj, isobar);
         fprintf('OK\n');
     end
+    
+    % Eval is a dangerous. Care!
+    name = [species{ii} ' = IND.' species{ii}]; 
+    eval(name);
+    save(species{ii},species{ii});
 end
 
-save('IND','-struct','IND')
+
 
 %% Nested functions
 function ret = parseTableIsobaric(ret, index, tab)
