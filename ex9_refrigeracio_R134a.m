@@ -22,21 +22,16 @@
 % d-Calcular la calor que absorbeix l?evaporador.
 % e-Calcular el COP
 
-error('R134a has to be uploaded');
+error('This example has to be reviewed');
 
-clear
+clearvars
 close all
-
-global IND
-if isempty(IND)
-    load('IND')
-end
 
 plow=2.4; % bar
 phigh=7;
 mp=0.1; % kg/s
 
-INIST_plotisobar(IND.R134a,[plow,phigh]);
+INIST_plotisobar('R134a',[plow,phigh]);
 
 p1=plow;
 T1=INIST('R134a','tsat_p',p1);

@@ -105,7 +105,7 @@ global IND
 
 try
     if isempty(IND) || ~isfield(IND,varargin{1})  
-        set = load('IND',varargin{1});
+        set = load(varargin{1});
         IND.(varargin{1}) = set.(varargin{1});
     end
 catch
