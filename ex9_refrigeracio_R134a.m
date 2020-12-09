@@ -22,6 +22,8 @@
 % d-Calcular la calor que absorbeix l?evaporador.
 % e-Calcular el COP
 
+error('This example has to be reviewed');
+
 clearvars
 close all
 
