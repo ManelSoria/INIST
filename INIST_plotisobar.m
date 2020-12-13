@@ -13,6 +13,12 @@ function INIST_plotisobar(dat,pv)
 global IND
 
 try
+    addpath('Database\')
+catch
+    error('Ups,... Database folder is not here pls download it')
+end
+
+try
     if isempty(IND) || ~isfield(IND,dat)  
         set = load(dat);
         IND.(dat) = set.(dat);
