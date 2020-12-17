@@ -10,6 +10,6 @@
 clearvars
 close all
 
-INIST_plotisobar('C3H8',[6.5 12]);
+INIST_plotisobar('C3H8',[6 6.65 12 ]);
 
 
