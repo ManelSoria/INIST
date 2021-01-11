@@ -104,6 +104,12 @@ function [ret] = INIST(varargin)
 global IND
 
 try
+    addpath('Database\')
+catch
+    error('Ups,... Database folder is not here pls download it')
+end
+
+try
     if isempty(IND) || ~isfield(IND,varargin{1})  
         set = load(varargin{1});
         IND.(varargin{1}) = set.(varargin{1});
