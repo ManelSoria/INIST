@@ -140,8 +140,44 @@ switch prop
     case 'psat_t'
         T=varargin{3};
         check_satT(T);
-        ret = interp1(dat.Tsat,dat.Psat,T);   
+        ret = interp1(dat.Tsat,dat.Psat,T);
         
+%  computation of  temperature from enthalpy and pressure
+    case 't_hp'
+        species = varargin{1}; %species considered
+        h = varargin{3}; %enthalpy [kJ/kg]
+        p = varargin{4}; %pressure [bar]
+        T_0 = varargin{5}; %temperature guess [K]
+        
+        options=optimset(...
+        'Display','none',...
+        'MaxIter',10000,...
+        'TolFun', 1.0e-10,...
+        'TolX',1.0e-4);
+
+        P_crit=INIST(species,'pcrit'); %Critical pressure computation
+
+        if p>P_crit
+            has2b0 = @(T) h - INIST(species,'h_pt',p,T);
+            ret = fsolve(has2b0,T_0,options);            
+        else
+            hl = INIST(species,'hl_p',p);
+            hv = INIST(species,'hv_p',p);
+            if h<=hv && h>=hl
+                % In saturation line
+                x2 = (h-hl)/(hv-hl);
+                if x2>1 || x2<0 
+                    error('Error in the vapour quality!!'); 
+                else
+                    ret = INIST(species,'tsat_p',p);
+                end
+            else
+                % Not in the saturation line
+                has2b0 = @(T) h - INIST(species,'h_pt',p,T);
+                ret = fsolve(has2b0,T_0,options);
+            end
+        end
+                
 %  saturated liquid properties as a function of pressure    
     case 'vl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.vl,p);        
     case 'ul_p',  p=varargin{3}; ccheck_satp(p);ret=interp1(dat.Psat,dat.ul,p);
