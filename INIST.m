@@ -306,6 +306,7 @@ switch prop
     case 'maxt'
         ret=dat.isoP{1}.T(end);
     case 'h_ptr'
+        species = varargin{1};
         p = varargin{3};
         T = varargin{4};
         rho = varargin{5};
@@ -319,6 +320,7 @@ switch prop
             ret = hl + x1*(hv-hl); %kJ/kg
         end
     case 's_ptr'
+        species = varargin{1};
         p = varargin{3};
         T = varargin{4};
         rho = varargin{5};
