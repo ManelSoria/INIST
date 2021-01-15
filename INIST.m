@@ -436,5 +436,38 @@ end
         end
     end
 
+    function x = saturated_check(T,P,rho,species)
+    % Determine if the conditions correspond to saturated or not
+    % Input data::
+    %   T --> Temperature [K]
+    %   P --> Pressure [bar]
+    %   rho --> substance density [kg/m^3]
+    %   species --> type of element [string]
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Output data::
+    %   x --> quality factor (between 0 and 1, or -1 if is not saturated)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        T_crit = INIST(species,'tcrit');
+        P_crit = INIST(species,'pcrit');
+
+        if (P > P_crit || T > T_crit)
+            x = -1; 
+            return;
+        end
+        
+        % Check out the volume fraction
+        v = 1/rho;
+
+        vl = INIST(species,'vl_p',P);
+        vv = INIST(species,'vv_p',P);
+
+        if v<vl || v>vv
+            x=-1;
+        else
+            x=(v-vl)/(vv-vl);
+        end
+    end
+
 end
 
