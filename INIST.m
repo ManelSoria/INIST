@@ -83,7 +83,10 @@ function [ret] = INIST(varargin)
 %     conductivity    'k_pt',  p , t
 %  temperature as a function of ...
 %     pressure and entropy 't_ps', p ,s  
-%     
+% 
+%   other functions:
+%       't_hp', h, p, T0   returns the temperature given the enthalpy, pressure and a guessed temperature
+%
 %  special functions:
 %       'minp'        returns the minimum isobar available
 %       'maxp'        idem max isobar
