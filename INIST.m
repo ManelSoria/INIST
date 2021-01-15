@@ -83,6 +83,10 @@ function [ret] = INIST(varargin)
 %     conductivity    'k_pt',  p , t
 %  temperature as a function of ...
 %     pressure and entropy 't_ps', p ,s  
+%   Enthalpy as a function of pressure, temperature and...
+%       density 'h_ptr', p, t, rho
+%   Entropy as a function of pressure, temperature and...
+%       density 's_ptr', p, t, rho
 %     
 %  special functions:
 %       'minp'        returns the minimum isobar available
@@ -301,6 +305,31 @@ switch prop
         ret=dat.isoP{1}.T(1);
     case 'maxt'
         ret=dat.isoP{1}.T(end);
+    case 'h_ptr'
+        p = varargin{3};
+        T = varargin{4};
+        rho = varargin{5};
+        
+        x1 = saturated_check(T,p,rho,species);
+        if (x1<0) % not saturated
+            ret=INIST(species,'h_pt',p,T); %kJ/kg
+        else % saturated
+            hl = INIST(species,'hl_p',p);
+            hv = INIST(species,'hv_p',p);
+            ret = hl + x1*(hv-hl); %kJ/kg
+        end
+    case 's_ptr'
+        p = varargin{3};
+        T = varargin{4};
+        rho = varargin{5};
+        x1 = saturated_check(T,p,rho,species);
+        if (x1<0) % not saturated
+            ret=INIST(species,'s_pt',p,T); %kJ/kgK
+        else  % saturated
+            sl = INIST(species,'sl_p',p);
+            sv = INIST(species,'sl_p',p);
+            ret = sl + x1*(sv-sl); %kJ/kgK
+        end
     otherwise
         error('Unknown input parameter');
 end
@@ -394,6 +423,39 @@ end
             y=interp1(X(1:q),Y(1:q),x);
         else
             y=interp1(X(q+1:end),Y(q+1:end),x);
+        end
+    end
+
+    function x = saturated_check(T,P,rho,species)
+    % Determine if the conditions correspond to saturated or not
+    % Input data::
+    %   T --> Temperature [K]
+    %   P --> Pressure [bar]
+    %   rho --> substance density [kg/m^3]
+    %   species --> type of element [string]
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Output data::
+    %   x --> quality factor (between 0 and 1, or -1 if is not saturated)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        T_crit = INIST(species,'tcrit');
+        P_crit = INIST(species,'pcrit');
+
+        if (P > P_crit || T > T_crit)
+            x = -1; 
+            return;
+        end
+        
+        % Check out the volume fraction
+        v = 1/rho;
+
+        vl = INIST(species,'vl_p',P);
+        vv = INIST(species,'vv_p',P);
+
+        if v<vl || v>vv
+            x=-1;
+        else
+            x=(v-vl)/(vv-vl);
         end
     end
 
