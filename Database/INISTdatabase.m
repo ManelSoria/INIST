@@ -41,15 +41,14 @@ isobars2 = 0.02:0.01:0.1;
 isobars3 = 0.2:0.1:10;
 isobars4 = 10.5:0.5:100;
 isobars5 = 101:1:250;
-isobars = [isobars1 isobars2 isobars3 isobars4 isobars5];
+isobars5 = 255:5:500;
+isobars = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6];
 
 % Saturated
 Tinc = 1;
 Tmin = 0;
 Tmax = 10000;
 s_Type1 = 'SatP';
-
-
 
 for ii=1:length(species)
     IND.(species{ii}).name = species{ii};
@@ -59,7 +58,7 @@ for ii=1:length(species)
     % The webread function call the base url and adds the url-enconded 
     % parameters. The weboptions specifies a table stile for the return.
     satT = webread(s_base_url, ...
-        'ID', idcas{ii}, 'Type', s_Type1, 'Digits', digits, 'TLow', Tmin, 'THigh', Tmax, 'PInc', Tinc, ...
+        'ID', idcas{ii}, 'Type', s_Type1, 'Digits', digits, 'TLow', Tmin, 'THigh', Tmax, 'TInc', Tinc, ...
         'RefState', 'DEF', 'TUnit', 'K', 'PUnit', 'bar', 'DUnit', 'kg/m3', 'HUnit', 'kJ/kg', ...
         'WUnit', 'm/s', 'VisUnit', 'Pa*s', 'STUnit', 'N/m', 'Wide', 'on', weboptions('ContentType','table'));
     
@@ -82,8 +81,8 @@ for ii=1:length(species)
         fprintf('OK\n');
     end
     
-    % Eval is a dangerous. Care!
-    name = [species{ii} ' = IND.' species{ii}]; 
+    % Eval is a dangerous function. Care!
+    name = [species{ii} ' = IND.' species{ii} ';']; 
     eval(name);
     save(species{ii},species{ii});
 end
