@@ -120,7 +120,7 @@ end
 
 
 dat = IND.(varargin{1});
-prop=lower(varargin{2}); 
+prop = lower(varargin{2}); 
 
 switch prop
     case 'mm'
