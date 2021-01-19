@@ -103,11 +103,9 @@ function [ret] = INIST(varargin)
 
 global IND
 
-try
-    addpath('Database\')
-catch
-    error('Ups,... Database folder is not here pls download it')
-end
+
+path = fileparts(which(mfilename));
+addpath(genpath(path));
 
 try
     if isempty(IND) || ~isfield(IND,varargin{1})  
