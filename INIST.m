@@ -8,7 +8,8 @@ function [ret] = INIST(varargin)
 % Units: T(K), p(bar), h and u: kJ/kg, v: m^3/kg, rho: kg/m^3 s: kJ/kgK,
 % a: m/s, cv and cp: kJ/kgK, JT: bar/K, mu: Pa.s, k: W/mK, MM: kg/mol
 % SF: N.m
-% 1st argument: substance properties
+% 1st argument: substance name
+%               'Database' to return the list of database elements
 % 2nd and remaining arguments: 
 %  critical temperature     'tcrit' 
 %  critical pressure        'pcrit'
@@ -106,6 +107,16 @@ global IND
 
 path = fileparts(which(mfilename));
 addpath(genpath(path));
+
+if strcmp(varargin{1},'Database')
+    databasepath = [path '\Database\*.mat'];
+    % Adapts path to the OS
+    databasepath = osi(databasepath);
+    info  = dir(databasepath);
+    ret = {info.name};
+    ret = strrep(ret,'.mat','');
+    return
+end
 
 try
     if isempty(IND) || ~isfield(IND,varargin{1})  
@@ -403,3 +414,17 @@ end
 
 end
 
+function [ fname ] = osi( fname )
+% Manel Soria July 2019
+% operating system independent
+% given a path name
+% changes / to \ or viceversa, only if needed, to suit the operating system
+% eg osi('a/b/c') excuted in a windows machine will return 'a\b\c'
+
+if ismac || isunix % to unix
+    fname(fname=='\')='/';
+else % windows
+    fname(fname=='/')='\';    
+end
+
+end
