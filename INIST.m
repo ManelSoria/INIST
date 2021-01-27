@@ -83,7 +83,10 @@ function [ret] = INIST(varargin)
 %     conductivity    'k_pt',  p , t
 %  temperature as a function of ...
 %     pressure and entropy 't_ps', p ,s  
-%     
+% 
+%   other functions:
+%       't_hp', h, p, T0   returns the temperature given the enthalpy, pressure and a guessed temperature
+%
 %  special functions:
 %       'minp'        returns the minimum isobar available
 %       'maxp'        idem max isobar
@@ -137,8 +140,44 @@ switch prop
     case 'psat_t'
         T=varargin{3};
         check_satT(T);
-        ret = interp1(dat.Tsat,dat.Psat,T);   
+        ret = interp1(dat.Tsat,dat.Psat,T);
         
+%  computation of  temperature from enthalpy and pressure
+    case 't_hp'
+        species = varargin{1}; %species considered
+        h = varargin{3}; %enthalpy [kJ/kg]
+        p = varargin{4}; %pressure [bar]
+        T_0 = varargin{5}; %temperature guess [K]
+        
+        options=optimset(...
+        'Display','none',...
+        'MaxIter',10000,...
+        'TolFun', 1.0e-10,...
+        'TolX',1.0e-4);
+
+        P_crit=INIST(species,'pcrit'); %Critical pressure computation
+
+        if p>P_crit
+            has2b0 = @(T) h - INIST(species,'h_pt',p,T);
+            ret = fsolve(has2b0,T_0,options);            
+        else
+            hl = INIST(species,'hl_p',p);
+            hv = INIST(species,'hv_p',p);
+            if h<=hv && h>=hl
+                % In saturation line
+                x2 = (h-hl)/(hv-hl);
+                if x2>1 || x2<0 
+                    error('Error in the vapour quality!!'); 
+                else
+                    ret = INIST(species,'tsat_p',p);
+                end
+            else
+                % Not in the saturation line
+                has2b0 = @(T) h - INIST(species,'h_pt',p,T);
+                ret = fsolve(has2b0,T_0,options);
+            end
+        end
+                
 %  saturated liquid properties as a function of pressure    
     case 'vl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.vl,p);        
     case 'ul_p',  p=varargin{3}; ccheck_satp(p);ret=interp1(dat.Psat,dat.ul,p);
@@ -394,6 +433,39 @@ end
             y=interp1(X(1:q),Y(1:q),x);
         else
             y=interp1(X(q+1:end),Y(q+1:end),x);
+        end
+    end
+
+    function x = saturated_check(T,P,rho,species)
+    % Determine if the conditions correspond to saturated or not
+    % Input data::
+    %   T --> Temperature [K]
+    %   P --> Pressure [bar]
+    %   rho --> substance density [kg/m^3]
+    %   species --> type of element [string]
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Output data::
+    %   x --> quality factor (between 0 and 1, or -1 if is not saturated)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        T_crit = INIST(species,'tcrit');
+        P_crit = INIST(species,'pcrit');
+
+        if (P > P_crit || T > T_crit)
+            x = -1; 
+            return;
+        end
+        
+        % Check out the volume fraction
+        v = 1/rho;
+
+        vl = INIST(species,'vl_p',P);
+        vv = INIST(species,'vv_p',P);
+
+        if v<vl || v>vv
+            x=-1;
+        else
+            x=(v-vl)/(vv-vl);
         end
     end
 
