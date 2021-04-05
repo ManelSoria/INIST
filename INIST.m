@@ -207,8 +207,6 @@ switch prop
     case {'v_pt','u_pt','h_pt','s_pt','cv_pt','cp_pt','a_pt','jt_pt','mu_pt','r_pt','k_pt'}
         p=varargin{3}; 
         T=varargin{4}; 
-        checkp(p); 
-        checkT(T); 
         checkpT(p,T);
         p1=findp(p);
         
