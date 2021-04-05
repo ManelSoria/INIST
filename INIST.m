@@ -156,7 +156,7 @@ switch prop
         
 %  saturated liquid properties as a function of pressure    
     case 'vl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.vl,p);        
-    case 'ul_p',  p=varargin{3}; ccheck_satp(p);ret=interp1(dat.Psat,dat.ul,p);
+    case 'ul_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.ul,p);
     case 'hl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.hl,p);
     case 'sl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.sl,p);
     case 'cvl_p', p=varargin{3}; check_undefined_p(p); check_satp(p);ret=interp1(dat.Psat,dat.cvl,p);
