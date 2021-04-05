@@ -41,7 +41,7 @@ isobars2 = 0.02:0.01:0.1;
 isobars3 = 0.2:0.1:10;
 isobars4 = 10.5:0.5:100;
 isobars5 = 101:1:250;
-isobars5 = 255:5:500;
+isobars6 = 255:5:500;
 isobars = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6];
 
 % Saturated
