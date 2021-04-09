@@ -20,8 +20,16 @@ idcas = {'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
     'C7440597' 'C7782447' 'C811972'};
+Ref1 = 'NBP state ref. Sets the enthalpy and entropy to zero for the saturated liquid at the normal boiling point temperature.';
+Ref2 = 'IIR state ref. Sets to 200 kJ/kg and 1 kJ/(kg-K) for enthalpy and entropy, respectively, for the saturated liquid at 0°C';
+Ref3 = 'Reference sets to H = 2551.013479 kJ/kg and S = 9.103679 J/g*K  at 300.0 K and 0.010 bar.';
+Ref4 = 'Reference sets to H = 309.269908 kJ/kg and S = 6.839209 J/g*K  at 298.15 K and 1.000 bar.';
+Ref5 = 'Reference sets to H = 1699.663687 kJ/kg and S = 9.356091 J/g*K  at 300.0 K and 0.010 bar.';
+Ref6 = 'Reference sets to H = 271.013 kJ/kg andS = 6.41058 J/g*K  at 298.15 K and 1.000 bar.';
 
-
+Ref ={Ref3 Ref4 Ref1 Ref1 Ref2 Ref1 Ref1 Ref1 Ref1 Ref1 ...
+    Ref2 Ref2 Ref2 Ref2 Ref1 Ref1 Ref1 Ref1 Ref3 ...
+    Ref1 Ref6 Ref2};
 % This function takes as an input an existing database entry (e.g. IND.He)
 % and  download the data directly from the NIST website
 
@@ -54,6 +62,7 @@ for ii=1:length(species)
     IND.(species{ii}).name = species{ii};
     IND.(species{ii}).idcas = idcas{ii};
     IND.(species{ii}).MM = MM(ii);
+    IND.(species{ii}).Ref = Ref{ii};
     fprintf('Downloading saturated data for %s... ',species{ii});
     % The webread function call the base url and adds the url-enconded 
     % parameters. The weboptions specifies a table stile for the return.
