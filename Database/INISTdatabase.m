@@ -20,6 +20,7 @@ idcas = {'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
     'C7440597' 'C7782447' 'C811972'};
+
 Ref1 = 'NBP state ref. Sets the enthalpy and entropy to zero for the saturated liquid at the normal boiling point temperature.';
 Ref2 = 'IIR state ref. Sets to 200 kJ/kg and 1 kJ/(kg-K) for enthalpy and entropy, respectively, for the saturated liquid at 0°C';
 Ref3 = 'Reference sets to H = 2551.013479 kJ/kg and S = 9.103679 J/g*K  at 300.0 K and 0.010 bar.';
@@ -50,7 +51,8 @@ isobars3 = 0.2:0.1:10;
 isobars4 = 10.5:0.5:100;
 isobars5 = 101:1:250;
 isobars6 = 255:5:500;
-isobars = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6];
+isobars7 = 500:20:700;
+isobars = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6 isobars7];
 
 % Saturated
 Tinc = 1;

@@ -240,7 +240,7 @@ switch prop
             else
                 eq=@(x) INIST(varargin{1},'s_pt',p,x)-s;
                 options=optimset('Display','none');
-                ret=fsolve(eq,tsat,options);
+                ret=fsolve(eq,tsat*1.1,options);
             end
         else
             eq=@(x) INIST(varargin{1},'s_pt',p,x)-s;
