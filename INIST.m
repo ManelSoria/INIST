@@ -3,7 +3,7 @@ function [ret] = INIST(varargin)
 % Interpolation of Nonideal Idiosyncratic Splendiferous Tables
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
-% ESEIAAT - UPC - 2014-2020
+% ESEIAAT - UPC - 2014-2021
 %
 % Units: T(K), p(bar), h and u: kJ/kg, v: m^3/kg, rho: kg/m^3 s: kJ/kgK,
 % a: m/s, cv and cp: kJ/kgK, JT: bar/K, mu: Pa.s, k: W/mK, MM: kg/mol
