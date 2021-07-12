@@ -201,7 +201,19 @@ switch prop
     case 'av_t',  t=varargin{3}; check_undefined_t(t); check_satT(t);ret=interp1(dat.Tsat,dat.av,t);
     case 'muv_t', t=varargin{3}; check_satT(t);ret=interp1(dat.Tsat,dat.muv,t);
     case 'rv_t',  t=varargin{3}; check_satT(t);ret=interp1(dat.Tsat,dat.rv,t);
-    case 'kv_t',  t=varargin{3}; check_satT(t);ret=interp1(dat.Tsat,dat.kv,t);    
+    case 'kv_t',  t=varargin{3}; check_satT(t);ret=interp1(dat.Tsat,dat.kv,t);  
+        
+%  saturated  properties as a function of temperature and quality
+    case 'v_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.vv,t);liq=interp1(dat.Tsat,dat.vl,t);ret = x*(vap-liq)+liq;     
+    case 'u_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.uv,t);liq=interp1(dat.Tsat,dat.ul,t);ret = x*(vap-liq)+liq;
+    case 'h_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.hv,t);liq=interp1(dat.Tsat,dat.hl,t);ret = x*(vap-liq)+liq;
+    case 's_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.sv,t);liq=interp1(dat.Tsat,dat.sl,t);ret = x*(vap-liq)+liq;
+    case 'cv_tx', t=varargin{3};x=varargin{4}; check_satT(t);check_undefined_t(t);vap=interp1(dat.Tsat,dat.cvv,t);liq=interp1(dat.Tsat,dat.cvl,t);ret = x*(vap-liq)+liq;
+    case 'cp_tx', t=varargin{3};x=varargin{4}; check_satT(t);check_undefined_t(t);vap=interp1(dat.Tsat,dat.cpv,t);liq=interp1(dat.Tsat,dat.cpl,t);ret = x*(vap-liq)+liq;
+    case 'a_tx',  t=varargin{3};x=varargin{4}; check_satT(t);check_undefined_t(t);vap=interp1(dat.Tsat,dat.av,t);liq=interp1(dat.Tsat,dat.al,t);ret = x*(vap-liq)+liq;
+    case 'mu_tx', t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.muv,t);liq=interp1(dat.Tsat,dat.mul,t);ret = x*(vap-liq)+liq;
+    case 'r_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.rv,t);liq=interp1(dat.Tsat,dat.rl,t);ret = x*(vap-liq)+liq;
+    case 'k_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.kv,t);liq=interp1(dat.Tsat,dat.kl,t);ret = x*(vap-liq)+liq;  
 
         
     case {'v_pt','u_pt','h_pt','s_pt','cv_pt','cp_pt','a_pt','jt_pt','mu_pt','r_pt','k_pt'}
@@ -236,7 +248,8 @@ switch prop
             sv=INIST(varargin{1},'sv_p',p);
             tsat=INIST(varargin{1},'tsat_p',p);
             if s>=sl && s<=sv 
-                ret=tsat;
+                ret(1) = (s-sl)/(sv-sl);
+                ret(2) = tsat;
             else
                 eq=@(x) INIST(varargin{1},'s_pt',p,x)-s;
                 options=optimset('Display','none');
@@ -244,6 +257,27 @@ switch prop
             end
         else
             eq=@(x) INIST(varargin{1},'s_pt',p,x)-s;
+            options=optimset('Display','none');
+            ret=fsolve(eq,dat.Tcrit*1.1,options);
+        end
+    case 't_ph'
+        p=varargin{3}; 
+        h=varargin{4};
+        checkp(p);
+        if (p<dat.Pcrit) 
+            hl=INIST(varargin{1},'hl_p',p);
+            hv=INIST(varargin{1},'hv_p',p);
+            tsat=INIST(varargin{1},'tsat_p',p);
+            if h>=hl && h<=hv 
+                ret(1) = (h-hl)/(hv-hl);
+                ret(2) = tsat;
+            else
+                eq=@(x) INIST(varargin{1},'h_pt',p,x)-h;
+                options=optimset('Display','none');
+                ret=fsolve(eq,tsat*1.1,options);
+            end
+        else
+            eq=@(x) INIST(varargin{1},'h_pt',p,x)-h;
             options=optimset('Display','none');
             ret=fsolve(eq,dat.Tcrit*1.1,options);
         end
@@ -345,7 +379,7 @@ end
             error(sprintf('uhh? T=%e K is too low, min sat. temp. for %s is %e K',T,dat.name,dat.Tsat(1)));
         end
         if (T>dat.Tsat(end))
-            error(sprintf('uhh? T=%e K is above %s critical pressure=%e K',T,dat.name,dat.Tsat(end)));
+            error(sprintf('uhh? T=%e K is above %s critical temperature=%e K',T,dat.name,dat.Tsat(end)));
         end
     end
 
