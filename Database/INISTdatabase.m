@@ -9,17 +9,17 @@
 % automatically. If your internet shut down, save IND manually and start
 % from this point adjusting this code
 % Regards, Caleb
-
-species = {'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6' 'C2H4'...
+clear all % erase all global and local variables
+species = { 'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6' 'C2H4'...
     'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14' 'C6H12' 'C6H6' 'NH3'...
-    'He' 'O2' 'R134a'};
+    'He' 'O2' 'R134a'}; % 
 MM = [0.018 0.024 0.002 0.028 0.044 0.044 0.032 0.016 0.030 0.028 ...
     0.044 0.042 0.040 0.058 0.072 0.086 0.084 0.078 0.017 ...
-    0.004 0.032 0.10203];
-idcas = {'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
-    'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
+    0.004 0.032 0.10203]; % 
+idcas = { 'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
+    'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071''C74997'...
     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
-    'C7440597' 'C7782447' 'C811972'};
+    'C7440597' 'C7782447' 'C811972'}; % 
 
 Ref1 = 'NBP state ref. Sets the enthalpy and entropy to zero for the saturated liquid at the normal boiling point temperature.';
 Ref2 = 'IIR state ref. Sets to 200 kJ/kg and 1 kJ/(kg-K) for enthalpy and entropy, respectively, for the saturated liquid at 0°C';
@@ -29,8 +29,9 @@ Ref5 = 'Reference sets to H = 1699.663687 kJ/kg and S = 9.356091 J/g*K  at 300.0
 Ref6 = 'Reference sets to H = 271.013 kJ/kg andS = 6.41058 J/g*K  at 298.15 K and 1.000 bar.';
 
 Ref ={Ref3 Ref4 Ref1 Ref1 Ref2 Ref1 Ref1 Ref1 Ref1 Ref1 ...
-    Ref2 Ref2 Ref2 Ref2 Ref1 Ref1 Ref1 Ref1 Ref3 ...
-    Ref1 Ref6 Ref2};
+    Ref2 Ref2 Ref2 Ref2 Ref1 Ref1 Ref1 Ref1 Ref5 ...
+    Ref1 Ref6 Ref2}; % 
+
 % This function takes as an input an existing database entry (e.g. IND.He)
 % and  download the data directly from the NIST website
 
@@ -51,8 +52,13 @@ isobars3 = 0.2:0.1:10;
 isobars4 = 10.5:0.5:100;
 isobars5 = 101:1:250;
 isobars6 = 255:5:500;
-isobars7 = 500:20:700;
-isobars = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6 isobars7];
+isobars7 = 520:20:700;
+iso1 = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6 isobars7];
+iso2 = [isobars1 isobars2 isobars3 isobars4 isobars5];
+
+isobars = { iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, ...
+           iso1, iso1, iso2, iso2, iso2, iso2, iso2, iso2, iso1, iso1, ...
+           iso1, iso1}; % 
 
 % Saturated
 Tinc = 1;
@@ -71,21 +77,21 @@ for ii=1:length(species)
     satT = webread(s_base_url, ...
         'ID', idcas{ii}, 'Type', s_Type1, 'Digits', digits, 'TLow', Tmin, 'THigh', Tmax, 'TInc', Tinc, ...
         'RefState', 'DEF', 'TUnit', 'K', 'PUnit', 'bar', 'DUnit', 'kg/m3', 'HUnit', 'kJ/kg', ...
-        'WUnit', 'm/s', 'VisUnit', 'Pa*s', 'STUnit', 'N/m', 'Wide', 'on', weboptions('ContentType','table'));
+        'WUnit', 'm/s', 'VisUnit', 'Pa*s', 'STUnit', 'N/m', 'Wide', 'on', weboptions('ContentType','table','Timeout',15));
     
     % The table is then parsed
     IND.(species{ii}) = parseTableSaturated(IND.(species{ii}), satT);
     fprintf('OK\n');     
     
-    for jj =1:length(isobars)
-        fprintf('Downloading isobaric data for P = %.5f bar for %s... ', isobars(jj),species{ii});
+    for jj =1:length(isobars{ii})
+        fprintf('Downloading isobaric data for P = %.3f bar for %s... ', isobars{ii}(jj),species{ii});
         % The webread function call the base url and adds the url-enconded 
         % parameters. The weboptions specifies a table stile for the return
         isobar = webread(s_base_url, ...
-            'ID', idcas{ii}, 'Type', s_Type, 'Digits', digits, 'P', isobars(jj), ...
+            'ID', idcas{ii}, 'Type', s_Type, 'Digits', digits, 'P', isobars{ii}(jj), ...
             'RefState', 'DEF', 'TUnit', 'K', 'PUnit', 'bar', 'DUnit', 'kg/m3', 'HUnit', 'kJ/kg', ...
             'WUnit', 'm/s', 'VisUnit', 'Pa*s', 'STUnit', 'N/m', 'Wide', 'on', ...
-            'TLow', tmin, 'THigh', tmax, 'TInc', tinc, weboptions('ContentType','table'));
+            'TLow', tmin, 'THigh', tmax, 'TInc', tinc, weboptions('ContentType','table','Timeout',15));
 
         % The table is then parsed
         IND.(species{ii}) = parseTableIsobaric(IND.(species{ii}), jj, isobar);
@@ -136,7 +142,7 @@ function ret = parseTableIsobaric(ret, index, tab)
                 case 'Therm_Cond__W_m_K_'
                     ret.isoP{index}.k(row) = new_s2d(tab.Therm_Cond__W_m_K_(row));
                 case 'Phase'
-                    ret.isoP{index}.phase(row) = new_s2d(tab.Phase(row));
+                    ret.isoP{index}.phase{row} = new_s2d(tab.Phase(row));
             end
         end
     end  
@@ -209,7 +215,12 @@ function output = new_s2d(input)
     if isstring(input)
         output = str2double(input);
     elseif iscell(input)
-        output = str2double(input);
+        output = input{1};
+        if ~isnan(str2double(output))
+            output = str2double(output);
+        elseif strcmp(output,'undefined')
+            output = NaN;
+        end
     else
         output = input;
     end
