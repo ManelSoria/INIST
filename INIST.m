@@ -3,12 +3,13 @@ function [ret] = INIST(varargin)
 % Interpolation of Nonideal Idiosyncratic Splendiferous Tables
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
-% ESEIAAT - UPC - 2014-2020
+% ESEIAAT - UPC - 2014-2021
 %
 % Units: T(K), p(bar), h and u: kJ/kg, v: m^3/kg, rho: kg/m^3 s: kJ/kgK,
 % a: m/s, cv and cp: kJ/kgK, JT: bar/K, mu: Pa.s, k: W/mK, MM: kg/mol
 % SF: N.m
-% 1st argument: substance properties
+% 1st argument: substance name
+%               'Database' to return the list of database elements
 % 2nd and remaining arguments: 
 %  critical temperature     'tcrit' 
 %  critical pressure        'pcrit'
@@ -103,7 +104,21 @@ function [ret] = INIST(varargin)
 
 global IND
 
-try
+
+path = fileparts(which(mfilename));
+addpath(genpath(path));
+
+if strcmp(varargin{1},'Database') % Return a list of species in the database 
+    databasepath = [path '\Database\*.mat'];
+    % Adapts path to the OS
+    databasepath = osi(databasepath);
+    info  = dir(databasepath);
+    ret = {info.name};
+    ret = strrep(ret,'.mat','');
+    return
+end
+
+try % load the species needed
     if isempty(IND) || ~isfield(IND,varargin{1})  
         set = load(varargin{1});
         IND.(varargin{1}) = set.(varargin{1});
@@ -114,7 +129,7 @@ end
 
 
 dat = IND.(varargin{1});
-prop=lower(varargin{2}); 
+prop = lower(varargin{2}); 
 
 switch prop
     case 'mm'
@@ -141,7 +156,7 @@ switch prop
         
 %  saturated liquid properties as a function of pressure    
     case 'vl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.vl,p);        
-    case 'ul_p',  p=varargin{3}; ccheck_satp(p);ret=interp1(dat.Psat,dat.ul,p);
+    case 'ul_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.ul,p);
     case 'hl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.hl,p);
     case 'sl_p',  p=varargin{3}; check_satp(p);ret=interp1(dat.Psat,dat.sl,p);
     case 'cvl_p', p=varargin{3}; check_undefined_p(p); check_satp(p);ret=interp1(dat.Psat,dat.cvl,p);
@@ -192,8 +207,6 @@ switch prop
     case {'v_pt','u_pt','h_pt','s_pt','cv_pt','cp_pt','a_pt','jt_pt','mu_pt','r_pt','k_pt'}
         p=varargin{3}; 
         T=varargin{4}; 
-        checkp(p); 
-        checkT(T); 
         checkpT(p,T);
         p1=findp(p);
         
@@ -227,7 +240,7 @@ switch prop
             else
                 eq=@(x) INIST(varargin{1},'s_pt',p,x)-s;
                 options=optimset('Display','none');
-                ret=fsolve(eq,tsat,options);
+                ret=fsolve(eq,tsat*1.1,options);
             end
         else
             eq=@(x) INIST(varargin{1},'s_pt',p,x)-s;
@@ -399,3 +412,17 @@ end
 
 end
 
+function [ fname ] = osi( fname )
+% Manel Soria July 2019
+% operating system independent
+% given a path name
+% changes / to \ or viceversa, only if needed, to suit the operating system
+% eg osi('a/b/c') excuted in a windows machine will return 'a\b\c'
+
+if ismac || isunix % to unix
+    fname(fname=='\')='/';
+else % windows
+    fname(fname=='/')='\';    
+end
+
+end
