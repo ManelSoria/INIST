@@ -9,17 +9,38 @@
 % automatically. If your internet shut down, save IND manually and start
 % from this point adjusting this code
 % Regards, Caleb
-clear all % erase all global and local variables
+%clear all % erase all global and local variables
+% extended data base
+% species = { 'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6' 'C2H4'...
+%     'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14' 'C6H12' 'C6H6' 'NH3'...
+%     'He' 'O2' 'R134a'}; % 
+% MM = [0.018 0.024 0.002 0.028 0.044 0.044 0.032 0.016 0.030 0.028 ...
+%     0.044 0.042 0.040 0.058 0.072 0.086 0.084 0.078 0.017 ...
+%     0.004 0.032 0.10203]; % 
+% idcas = { 'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
+%     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071''C74997'...
+%     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
+%     'C7440597' 'C7782447' 'C811972'}; % 
+
+function INISTdatabase()
+
+
+clear all;
+
+
 species = { 'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6' 'C2H4'...
     'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14' 'C6H12' 'C6H6' 'NH3'...
     'He' 'O2' 'R134a'}; % 
 MM = [0.018 0.024 0.002 0.028 0.044 0.044 0.032 0.016 0.030 0.028 ...
     0.044 0.042 0.040 0.058 0.072 0.086 0.084 0.078 0.017 ...
-    0.004 0.032 0.10203]; % 
+    0.004 0.032 0.10203]; %  to be improved with more accurate values
 idcas = { 'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071''C74997'...
     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
     'C7440597' 'C7782447' 'C811972'}; % 
+
+% WARNING: see below for the list of species removed 
+
 
 Ref1 = 'NBP state ref. Sets the enthalpy and entropy to zero for the saturated liquid at the normal boiling point temperature.';
 Ref2 = 'IIR state ref. Sets to 200 kJ/kg and 1 kJ/(kg-K) for enthalpy and entropy, respectively, for the saturated liquid at 0°C';
@@ -60,18 +81,38 @@ isobars = { iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, ...
            iso1, iso1, iso2, iso2, iso2, iso2, iso2, iso2, iso1, iso1, ...
            iso1, iso1}; % 
 
+% REMOVE SOME SPECIES TO MAKE DATABASE SMALLER
+
+
+removeSp('CO');
+removeSp('N2O');
+removeSp('CH4O');
+removeSp('C2H6');
+removeSp('C2H4');
+removeSp('C3H6');
+removeSp('C3H4');
+removeSp('C5H10');
+removeSp('C5H12');
+removeSp('C6H6');
+removeSp('NH3');
+
+
 % Saturated
 Tinc = 1;
 Tmin = 0;
 Tmax = 10000;
 s_Type1 = 'SatP';
 
+ 
+fprintf('ARE YOU SURE TO GO ON ?? \n');
+keyboard 
+
 for ii=1:length(species)
+    fprintf('Downloading saturated data for %s... ',species{ii});    
     IND.(species{ii}).name = species{ii};
     IND.(species{ii}).idcas = idcas{ii};
     IND.(species{ii}).MM = MM(ii);
     IND.(species{ii}).Ref = Ref{ii};
-    fprintf('Downloading saturated data for %s... ',species{ii});
     % The webread function call the base url and adds the url-enconded 
     % parameters. The weboptions specifies a table stile for the return.
     satT = webread(s_base_url, ...
@@ -224,4 +265,16 @@ function output = new_s2d(input)
     else
         output = input;
     end
+end
+
+function removeSp(qq)
+    % removes species qq
+    fprintf('NOT DOWNLOADING %s \n',qq);
+    d=find(ismember(species,qq));
+    species(d)=[];
+    MM(d)=[];
+    idcas(d)=[];
+    Ref(d)=[];
+    isobars(d)=[];
+end
 end
