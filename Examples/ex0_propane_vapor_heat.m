@@ -7,7 +7,11 @@
 
 % Examples of INIST use with propane
 
-clearvars
+clearvars 
+% "clearvars" clears vars but not global vars (where INIST data is stored)
+% you can use "clear all" instead but the data will be reloaded
+% not a big deal 
+
 close all
 
  % saturation temperature at 10 bar
@@ -31,11 +35,12 @@ close all
  for i=1:length(pv)
      dhv(i)= INIST('C3H8','hv_p',pv(i))-INIST('C3H8','hl_p',pv(i));
  end
- plot(pv,dhv);
+ plot(pv,dhv,'LineWidth',2);
  title('C3H8 vaporisation heat vs. saturation pressure');
  xlabel('Psat (bar)');
  ylabel('\Delta h (kJ/khK)');
  grid
+ set(gca,'FontSize',18)
  
  % Properties at 5 bar and 400 K
 INIST('C3H8','h_pt',5,400) % Enthalpy kJ/kgK
@@ -59,16 +64,5 @@ end
 T2=INIST('C3H8','Tsat_p',p2)
 
 
-%% Clean this?
-% Adding a new isobar
-% This command downloads 1 bar isobar and adds it to the IND structure in
-% memory, if it is not already there, but not the IND file previously loaded 
-% from disk.
-
-% IND.C3H8=INIST(IND.C3H8,'add_p',1);
-
-% This command does the same but also adds the data to the file specified
-% use with care, it can corrupt the database !
-% IND.C3H8=INIST(IND.C3H8,'add_p',1,'IND');
 
  

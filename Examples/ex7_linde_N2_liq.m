@@ -9,7 +9,6 @@
 % Multiple stage isentropic compression
 
 
-function ex7_linde_N2_liq
 
 error('THIS EXAMPLE HAS TO BE REVISED !!');
 
@@ -35,7 +34,59 @@ n=5;
 
 T3=fsolve(@hastobezero,T3)
 
-    function e=hastobezero(T3)
+   
+
+
+%%%%% NEED add_p
+INIST_plotisobar(IND.N2,pvec);
+%%%%%
+
+% save('IND','IND');
+
+% 
+% plot(s1,T1,'ro');
+% plot(s2,T2,'ro');
+% plot(s3,T3,'ro');
+% plot(s4,T4,'ro');
+% plot(s5,T5,'ro');
+
+T5
+
+wc
+
+ml
+
+
+for i=2:length(pvec)
+    plot(svec(i),Tvec(i),'ok')
+end
+
+% plot isoenthalpic expansion
+ipres=linspace(p4,p3,40);
+hh=h3;
+is=[];
+iT=[];
+for i=1:length(ipres)
+    if ipres(i)<INIST(IND.N2,'pcrit')
+        hl=INIST('N2','hl_p',ipres(i));
+        hv=INIST('N2','hv_p',ipres(i));
+        sl=INIST('N2','sl_p',ipres(i));
+        sv=INIST('N2','sv_p',ipres(i));
+        xx=(hh-hl)/(hv-hl);
+        is(i)=sl+xx*(sv-sl);
+        iT(i)=INIST(IND.N2,'tsat_p',ipres(i));
+    else
+        eq=@(Tx) INIST('N2','h_pt',ipres(i),Tx)-hh;
+        tt=fsolve(eq,T3,optimset('Display','none'));
+        iT(i)=tt;
+        is(i)=INIST('N2','s_pt',ipres(i),tt);
+    end
+end
+plot(is,iT,'r')
+
+
+
+ function e=hastobezero(T3)
         
         p1=plow;
         T1=Tvec(1);
@@ -89,53 +140,3 @@ T3=fsolve(@hastobezero,T3)
         e=abs(qi)-(mg-ml)*(h1-h5);
     end
 
-
-%%%%% NEED add_p
-INIST_plotisobar(IND.N2,pvec);
-%%%%%
-
-% save('IND','IND');
-
-% 
-% plot(s1,T1,'ro');
-% plot(s2,T2,'ro');
-% plot(s3,T3,'ro');
-% plot(s4,T4,'ro');
-% plot(s5,T5,'ro');
-
-T5
-
-wc
-
-ml
-
-
-for i=2:length(pvec)
-    plot(svec(i),Tvec(i),'ok')
-end
-
-% plot isoenthalpic expansion
-ipres=linspace(p4,p3,40);
-hh=h3;
-is=[];
-iT=[];
-for i=1:length(ipres)
-    if ipres(i)<INIST(IND.N2,'pcrit')
-        hl=INIST('N2','hl_p',ipres(i));
-        hv=INIST('N2','hv_p',ipres(i));
-        sl=INIST('N2','sl_p',ipres(i));
-        sv=INIST('N2','sv_p',ipres(i));
-        xx=(hh-hl)/(hv-hl);
-        is(i)=sl+xx*(sv-sl);
-        iT(i)=INIST(IND.N2,'tsat_p',ipres(i));
-    else
-        eq=@(Tx) INIST('N2','h_pt',ipres(i),Tx)-hh;
-        tt=fsolve(eq,T3,optimset('Display','none'));
-        iT(i)=tt;
-        is(i)=INIST('N2','s_pt',ipres(i),tt);
-    end
-end
-plot(is,iT,'r')
-
-
-end

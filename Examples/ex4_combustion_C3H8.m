@@ -7,7 +7,7 @@ function ex4_combustion_C3H8
 %
 % Combustion LC3H8 / LO2
 % Example: liquid phase propellants
-% Requires HGS
+% Requires HGS, remmeber to addpath !!
 
 species={'C3H8',...
     'CO2',...
