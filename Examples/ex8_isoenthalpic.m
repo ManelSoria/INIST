@@ -6,18 +6,22 @@
 %
 % Example: Plot N2 isoenthalpic lines
 
-clearvars
+clear all
 close all
 
 
-pvec=logspace(log10(1),log10(200),10); % a set of pressure values
+fprintf('Wait a bit.. this is a long example\n');
+fprintf('Note that iso enthalpy lines become more and more horizontal (parallel to isotherms)\n');
+fprintf('when temperature increases and the saturation bell is father\n');
+
+pvec=logspace(log10(0.5),log10(200),8); % a set of pressure values from 0.5 to 200
 
 
-INIST_plotisobar('N2',pvec); 
+INIST_plotisobar('N2',pvec,'b'); 
 
 hold on;
 
-T0=linspace(70,250,10);
+T0=linspace(70,300,7);
 
 for j=1:length(T0)
     % plot isoenthalpic expansion
@@ -43,7 +47,10 @@ for j=1:length(T0)
         iT(i)=tt;
         is(i)=INIST('N2','s_pt',pvec(i),tt);
     end
-    plot(is,iT,'-r')
+    axis( [2 7 50 300])
+    plot(is,iT,'-g','LineWidth',2)
+    drawnow
 end
 
-axis( [2 6 50 300])
+set(gca,'FontSize',18)
+title('N2 isobars (blue), iso enthalpy lines (green) and saturation bell (red) ');

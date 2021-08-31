@@ -108,7 +108,7 @@ global IND
 path = fileparts(which(mfilename));
 addpath(genpath(path));
 
-if strcmp(varargin{1},'Database')
+if strcmp(varargin{1},'Database') % Return a list of species in the database 
     databasepath = [path '\Database\*.mat'];
     % Adapts path to the OS
     databasepath = osi(databasepath);
@@ -118,7 +118,7 @@ if strcmp(varargin{1},'Database')
     return
 end
 
-try
+try % load the species needed
     if isempty(IND) || ~isfield(IND,varargin{1})  
         set = load(varargin{1});
         IND.(varargin{1}) = set.(varargin{1});

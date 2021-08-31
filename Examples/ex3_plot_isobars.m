@@ -10,6 +10,14 @@
 clearvars
 close all
 
-INIST_plotisobar('C3H8',[6 6.65 12 ]);
+isobarV=[4 6 8 10 ];
+INIST_plotisobar('C3H8',isobarV);
+ set(gca,'FontSize',18)
 
+ % add plot legend
+LL={};
+for i=1:numel(isobarV)
+    LL{end+1}=sprintf('%.1f bar',isobarV(i));
+end
 
+legend(LL)
