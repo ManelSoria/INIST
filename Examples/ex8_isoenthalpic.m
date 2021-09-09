@@ -12,7 +12,7 @@ close all
 
 fprintf('Wait a bit.. this is a long example\n');
 fprintf('Note that iso enthalpy lines become more and more horizontal (parallel to isotherms)\n');
-fprintf('when temperature increases and the saturation bell is father\n');
+fprintf('when temperature increases and the saturation bell is farther\n');
 
 pvec=logspace(log10(0.5),log10(200),8); % a set of pressure values from 0.5 to 200
 

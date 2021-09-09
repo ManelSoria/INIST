@@ -7,7 +7,7 @@
 % Example by  Alejandro Nunez Labielle and Mario Gayete
 
 
-% A valve is connected to a O2 tank. 
+% A valve is connected to the bottom of a O2 tank. 
 % In the oxygen tank, we have saturated liquid at a pressure equal to
 % 10 bar. At the valve outlet, the pressure has decreased to 7 bar. 
 % We are askeed to obtain the O2 state after the valve, assuming that it is
