@@ -21,6 +21,8 @@
 %     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071''C74997'...
 %     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
 %     'C7440597' 'C7782447' 'C811972'}; % 
+
+% Corrections by Alessandro Rampazzo 2021
 clear all;
 
 %if you want to update the Molecular Masses and cas number put true below
