@@ -21,27 +21,75 @@
 %     'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071''C74997'...
 %     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
 %     'C7440597' 'C7782447' 'C811972'}; % 
-
-function INISTdatabase()
-
-
 clear all;
 
+%if you want to update the Molecular Masses and cas number put true below
+updateMM_and_idcas = true;
+
+%if you want a quick review of the changes put true below 
+display_MM_changes = false;
 
 species = { 'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6' 'C2H4'...
     'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14' 'C6H12' 'C6H6' 'NH3'...
-    'He' 'O2' 'R134a'}; % 
+    'He' 'O2' 'R134a'};
 MM = [0.018 0.024 0.002 0.028 0.044 0.044 0.032 0.016 0.030 0.028 ...
     0.044 0.042 0.040 0.058 0.072 0.086 0.084 0.078 0.017 ...
-    0.004 0.032 0.10203]; %  to be improved with more accurate values
+    0.004 0.032 0.10203]; %to be improved with more accurate values
+
 idcas = { 'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C124389'...
-    'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071''C74997'...
+    'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
     'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
     'C7440597' 'C7782447' 'C811972'}; % 
 
+if updateMM_and_idcas == 1
+    %MM of the individual elements
+    H_MM = 1.00794 / 1000;
+    O_MM = 15.9994 / 1000;
+    N_MM = 14.0067 / 1000;
+    C_MM = 12.0107 / 1000;
+    He_MM = 4.002602 / 1000;
+    F_MM = 18.9984 / 1000;
+    
+    %calculating every MM using element MMs
+    %         H2O         N2      H2         CO       CO2           N2O
+    MM_upd = [H_MM*2+O_MM, N_MM*2, H_MM*2, C_MM+O_MM, C_MM+O_MM*2, N_MM*2+O_MM, ...
+        ...%  CH4O              CH4          C2H6           C2H4
+        C_MM+H_MM*4 + O_MM,  C_MM+H_MM*4, C_MM*2+H_MM*6, C_MM*2+H_MM*4,...
+        ...%  C3H8          C3H6         C3H4           C4H10
+        C_MM*3+H_MM*8, C_MM*3+H_MM*6, C_MM*3+H_MM*4, C_MM*4+H_MM*10,...
+        ...%  C5H12            C6H14         C6H12             C6H6
+        C_MM*5+H_MM*12, C_MM*6 + H_MM*14, C_MM*6+H_MM*12, C_MM*6+H_MM*6,...
+        ...%  NH3     He     O2          R134a(C2H2F4)
+        N_MM+H_MM*3, He_MM, O_MM*2, C_MM*2+H_MM*2+F_MM*4]; %  more accurate values
+    
+    %                H2O        %N2       %H2        CO         CO2       N2O(it was wrong)
+    idcas_upd = { 'C7732185' 'C7727379' 'C1333740' 'C630080' 'C124389' 'C10024972'...
+        ...%CH4O     CH4    C2H6     C2H4     C3H8      C3H6     C3H4
+        'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
+        ...%C4H10   C5H12     C6H14     C6H12     C6H6       NH3
+        'C106978' 'C109660' 'C110543' 'C110827' 'C71432' 'C7664417'...
+        ...%He         O2     R134a(C2H2F4)
+        'C7440597' 'C7782447' 'C811972'}; %
+    
+    assert(length(idcas_upd) == length(MM_upd))
+    
+    %quick review of the changes
+    if display_MM_changes
+        disp("species   MM old[kg/mol] | MM updated[kg/mol] | relative difference");
+        for i = 1:length(species)
+            fprintf("%s:        %1.7f         %1.7f               %1.3e\n",...
+                species{i},MM(i),MM_upd(i),(MM(i) - MM_upd(i)) / MM_upd(i))
+        end
+    end
+    %update MM and idcas
+    MM = MM_upd;
+    idcas = idcas_upd;
+    
+    
+    
+end
+
 % WARNING: see below for the list of species removed 
-
-
 Ref1 = 'NBP state ref. Sets the enthalpy and entropy to zero for the saturated liquid at the normal boiling point temperature.';
 Ref2 = 'IIR state ref. Sets to 200 kJ/kg and 1 kJ/(kg-K) for enthalpy and entropy, respectively, for the saturated liquid at 0°C';
 Ref3 = 'Reference sets to H = 2551.013479 kJ/kg and S = 9.103679 J/g*K  at 300.0 K and 0.010 bar.';
@@ -83,19 +131,22 @@ isobars = { iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, iso1, ...
 
 % REMOVE SOME SPECIES TO MAKE DATABASE SMALLER
 
-
-removeSp('CO');
-removeSp('N2O');
-removeSp('CH4O');
-removeSp('C2H6');
-removeSp('C2H4');
-removeSp('C3H6');
-removeSp('C3H4');
-removeSp('C5H10');
-removeSp('C5H12');
-removeSp('C6H6');
-removeSp('NH3');
-
+% changed to be able to call the function from a simple script
+% ===================================================================================
+[species,MM,idcas_upd,Ref,isobars] = removeSp('CO',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('N2O',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('CH4O',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C2H6',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C2H4',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C3H6',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C3H4',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C5H10',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C5H12',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C6H14',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C6H12',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('C6H6',species,MM,idcas_upd,Ref,isobars);
+[species,MM,idcas_upd,Ref,isobars] = removeSp('NH3',species,MM,idcas_upd,Ref,isobars);
+% ===================================================================================
 
 % Saturated
 Tinc = 1;
@@ -103,20 +154,31 @@ Tmin = 0;
 Tmax = 10000;
 s_Type1 = 'SatP';
 
- 
-fprintf('ARE YOU SURE TO GO ON ?? \n');
-keyboard 
+    if updateMM_and_idcas == 0
+        fprintf('ARE YOU SURE TO GO ON DOWNLOADING DATA ?? \n');
+        keyboard 
+    end
 
 for ii=1:length(species)
+    
+    if updateMM_and_idcas == 1
+        set=load(species{ii});
+        IND.(species{ii}) = set.(species{ii});
+        IND.(species{ii}).MM=MM(ii);
+        name = [species{ii} ' = IND.' species{ii} ';']; 
+        eval(name);
+        save(species{ii},species{ii});        
+        continue
+    end
     fprintf('Downloading saturated data for %s... ',species{ii});    
     IND.(species{ii}).name = species{ii};
-    IND.(species{ii}).idcas = idcas{ii};
+    IND.(species{ii}).idcas = idcas_upd{ii};
     IND.(species{ii}).MM = MM(ii);
     IND.(species{ii}).Ref = Ref{ii};
     % The webread function call the base url and adds the url-enconded 
     % parameters. The weboptions specifies a table stile for the return.
     satT = webread(s_base_url, ...
-        'ID', idcas{ii}, 'Type', s_Type1, 'Digits', digits, 'TLow', Tmin, 'THigh', Tmax, 'TInc', Tinc, ...
+        'ID', idcas_upd{ii}, 'Type', s_Type1, 'Digits', digits, 'TLow', Tmin, 'THigh', Tmax, 'TInc', Tinc, ...
         'RefState', 'DEF', 'TUnit', 'K', 'PUnit', 'bar', 'DUnit', 'kg/m3', 'HUnit', 'kJ/kg', ...
         'WUnit', 'm/s', 'VisUnit', 'Pa*s', 'STUnit', 'N/m', 'Wide', 'on', weboptions('ContentType','table','Timeout',15));
     
@@ -129,7 +191,7 @@ for ii=1:length(species)
         % The webread function call the base url and adds the url-enconded 
         % parameters. The weboptions specifies a table stile for the return
         isobar = webread(s_base_url, ...
-            'ID', idcas{ii}, 'Type', s_Type, 'Digits', digits, 'P', isobars{ii}(jj), ...
+            'ID', idcas_upd{ii}, 'Type', s_Type, 'Digits', digits, 'P', isobars{ii}(jj), ...
             'RefState', 'DEF', 'TUnit', 'K', 'PUnit', 'bar', 'DUnit', 'kg/m3', 'HUnit', 'kJ/kg', ...
             'WUnit', 'm/s', 'VisUnit', 'Pa*s', 'STUnit', 'N/m', 'Wide', 'on', ...
             'TLow', tmin, 'THigh', tmax, 'TInc', tinc, weboptions('ContentType','table','Timeout',15));
@@ -139,12 +201,12 @@ for ii=1:length(species)
         fprintf('OK\n');
     end
     
-    % Eval is a dangerous function. Care!
+    % Not a very good practice. Care!
     name = [species{ii} ' = IND.' species{ii} ';']; 
     eval(name);
     save(species{ii},species{ii});
 end
-
+clear all
 
 
 %% Nested functions
@@ -251,7 +313,6 @@ function ret = parseTableSaturated(ret, tab)
     end
 end
 
-
 function output = new_s2d(input)
     if isstring(input)
         output = str2double(input);
@@ -267,8 +328,9 @@ function output = new_s2d(input)
     end
 end
 
-function removeSp(qq)
-    % removes species qq
+% changed input and output to be able to call it from a simple script and
+% not from a nested function with shared variables
+function [species,MM,idcas,Ref,isobars] = removeSp(qq,species,MM,idcas,Ref,isobars)
     fprintf('NOT DOWNLOADING %s \n',qq);
     d=find(ismember(species,qq));
     species(d)=[];
@@ -277,4 +339,5 @@ function removeSp(qq)
     Ref(d)=[];
     isobars(d)=[];
 end
-end
+
+
