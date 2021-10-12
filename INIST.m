@@ -104,9 +104,10 @@ function [ret] = INIST(varargin)
 
 global IND
 
-
-path = fileparts(which(mfilename));
-addpath(genpath(path));
+if 7~=exist('Database','dir')
+    path = fileparts(which(mfilename));
+    addpath(genpath(path));
+end
 
 if strcmp(varargin{1},'Database') % Return a list of species in the database 
     databasepath = [path '\Database\*.mat'];
