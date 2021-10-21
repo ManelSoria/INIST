@@ -69,6 +69,34 @@ function [ret] = INIST(varargin)
 %     viscosity       'muv_t', t
 %     density         'rv_t' , t
 %     conductivity    'kv_t' , t
+%  saturated vapour-liquid properties as a function of temperature and
+%       quality
+%     volume          'v_tx' , t, x 
+%     energy          'u_tx' , t, x 
+%     enthalpy        'h_tx' , t, x 
+%     entropy         's_tx' , t, x 
+%     specific heat coeff at constant volume:
+%                     'cv_tx' , t, x 
+%     specific heat coeff at constant pressure:
+%                     'cp_tx' , t, x 
+%     sound speed     'a_tx' , t, x 
+%     viscosity       'mu_tx' , t, x 
+%     density         'r_tx' , t, x 
+%     conductivity    'k_tx' , t, x 
+%  saturated vapour-liquid properties as a function of pressure and
+%       quality
+%     volume          'v_px' , p, x 
+%     energy          'u_px' , p, x 
+%     enthalpy        'h_px' , p, x 
+%     entropy         's_px' , p, x 
+%     specific heat coeff at constant volume:
+%                     'cv_px' , p, x 
+%     specific heat coeff at constant pressure:
+%                     'cp_px' , p, x 
+%     sound speed     'a_px' , p, x 
+%     viscosity       'mu_px' , p, x 
+%     density         'r_px' , p, x 
+%     conductivity    'k_px' , p, x 
 %  non-saturated properties as a function of pressure and temperature
 %     volume          'v_pt' , p , t
 %     energy          'u_pt' , p , t
@@ -84,6 +112,7 @@ function [ret] = INIST(varargin)
 %     conductivity    'k_pt',  p , t
 %  temperature as a function of ...
 %     pressure and entropy 't_ps', p ,s  
+%     pressure and enthalpy 't_ph', p ,h  
 %     
 %  special functions:
 %       'minp'        returns the minimum isobar available
@@ -214,7 +243,19 @@ switch prop
     case 'a_tx',  t=varargin{3};x=varargin{4}; check_satT(t);check_undefined_t(t);vap=interp1(dat.Tsat,dat.av,t);liq=interp1(dat.Tsat,dat.al,t);ret = x*(vap-liq)+liq;
     case 'mu_tx', t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.muv,t);liq=interp1(dat.Tsat,dat.mul,t);ret = x*(vap-liq)+liq;
     case 'r_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.rv,t);liq=interp1(dat.Tsat,dat.rl,t);ret = x*(vap-liq)+liq;
-    case 'k_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.kv,t);liq=interp1(dat.Tsat,dat.kl,t);ret = x*(vap-liq)+liq;  
+    case 'k_tx',  t=varargin{3};x=varargin{4}; check_satT(t);vap=interp1(dat.Tsat,dat.kv,t);liq=interp1(dat.Tsat,dat.kl,t);ret = x*(vap-liq)+liq; 
+        
+%   saturated  properties as a function of pressure and quality
+    case 'v_px',  p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.vv,p);liq=interp1(dat.Tsat,dat.vl,p);ret = x*(vap-liq)+liq;     
+    case 'u_px',  p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.uv,p);liq=interp1(dat.Tsat,dat.ul,p);ret = x*(vap-liq)+liq;
+    case 'h_px',  p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.hv,p);liq=interp1(dat.Tsat,dat.hl,p);ret = x*(vap-liq)+liq;
+    case 's_px',  p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.sv,p);liq=interp1(dat.Tsat,dat.sl,p);ret = x*(vap-liq)+liq;
+    case 'cv_px', p=varargin{3};x=varargin{4}; check_satp(p);check_undefined_p(p);vap=interp1(dat.Tsat,dat.cvv,p);liq=interp1(dat.Tsat,dat.cvl,p);ret = x*(vap-liq)+liq;
+    case 'cp_px', p=varargin{3};x=varargin{4}; check_satp(p);check_undefined_p(p);vap=interp1(dat.Tsat,dat.cpv,p);liq=interp1(dat.Tsat,dat.cpl,p);ret = x*(vap-liq)+liq;
+    case 'a_px',  p=varargin{3};x=varargin{4}; check_satp(p);check_undefined_p(p);vap=interp1(dat.Tsat,dat.av,p);liq=interp1(dat.Tsat,dat.al,p);ret = x*(vap-liq)+liq;
+    case 'mu_px', p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.muv,p);liq=interp1(dat.Tsat,dat.mul,p);ret = x*(vap-liq)+liq;
+    case 'r_px',  p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.rv,p);liq=interp1(dat.Tsat,dat.rl,p);ret = x*(vap-liq)+liq;
+    case 'k_px',  p=varargin{3};x=varargin{4}; check_satp(p);vap=interp1(dat.Tsat,dat.kv,p);liq=interp1(dat.Tsat,dat.kl,p);ret = x*(vap-liq)+liq;
 
         
     case {'v_pt','u_pt','h_pt','s_pt','cv_pt','cp_pt','a_pt','jt_pt','mu_pt','r_pt','k_pt'}
