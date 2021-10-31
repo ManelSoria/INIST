@@ -1,8 +1,9 @@
+
 function INIST_plotisobar(dat,pv,varargin)
 % INIST - 
 % Interpolation of Nonideal Idiosyncratic Splendiferous Tables
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
-% Data downloaded from NIST web page
+% Data downloaded from NIST web page 
 % ESEIAAT - UPC - 2014-2020
 %
 % INIST_plotisobar(dat,p,color)
@@ -46,10 +47,23 @@ for j=1:length(pv)% plot isobar number j
            Snext = IND.(dat).isoP{ii+1}.s;
            Sprev = IND.(dat).isoP{ii}.s;
            Pnext = IND.(dat).isoP{ii+1}.P;
-           Pprev = IND.(dat).isoP{ii}.P;
-           S = (Snext - Sprev) ./ (Pnext -Pprev) .* (pv(j) - Pprev) + Sprev;
+           Pprev = IND.(dat).isoP{ii}.P;           
            Tprev = IND.(dat).isoP{ii}.T;
            Tnext = IND.(dat).isoP{ii+1}.T;
+           
+           lprev = length(Sprev);
+           lnext = length(Snext);
+           if lnext ~= lprev 
+              if lnext < lprev 
+                  Sprev = Sprev(2:end);
+                  Tprev = Tprev(2:end);
+              else
+                  Snext = Snext(2:end);
+                  Tnext = Tnext(2:end);
+              end
+           end
+               
+           S = (Snext - Sprev) ./ (Pnext -Pprev) .* (pv(j) - Pprev) + Sprev;
            T = (Tnext+Tprev)/2;
            
            if numel(varargin)>0
