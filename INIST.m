@@ -5,9 +5,8 @@ function [ret] = INIST(varargin)
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2021
 %
-% Units: T(K), p(bar), h and u: kJ/kg, v: m^3/kg, rho: kg/m^3 s: kJ/kgK,
+% Units: T: K, p: bar, h and u: kJ/kg, v: m^3/kg, rho: kg/m^3 s: kJ/kgK,
 % a: m/s, cv and cp: kJ/kgK, JT: bar/K, mu: Pa.s, k: W/mK, MM: kg/mol
-% SF: N.m
 % 1st argument: substance name
 %               'Database' to return the list of database elements
 % 2nd and remaining arguments: 
@@ -120,15 +119,6 @@ function [ret] = INIST(varargin)
 %       'mint'        idem minimum temperature 
 %       'maxt'        idem maximum temperature 
 %       'isobars'     returns a vector with the available isobars
-% 
-%       'add_p' , p, filename     Disabled
-%                                 downloads and stores a new isobar.
-%                                 filename is optional. If given, it is 
-%                                 the name of the file where the IND
-%                                 data is stored needs to be
-%                                 specified, so that the isobar
-%                                 data can be updated. This will add
-%                                 the new isobar to the database file.
 % 
 
 global IND
