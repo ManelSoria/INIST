@@ -133,7 +133,7 @@ function [ret] = INIST(varargin)
 
 global IND
 
-if 7~=exist('Database','dir')
+if exist('Database','dir')~=7
     path = fileparts(which(mfilename));
     addpath(genpath(path));
 end
@@ -323,73 +323,19 @@ switch prop
             options=optimset('Display','none');
             ret=fsolve(eq,dat.Tcrit*1.1,options);
         end
-    case 'add_p'
-        error('add_p is disabled')
-        p=varargin{3};
         
-        outr=0;
-        try
-            p1=findp(p);
-        catch
-            outr=1;
-        end
-        
-        if outr==0 && ( ...
-                abs(dat.isoP{p1}.P-p)<1e-3 || ...
-                abs(dat.isoP{p1+1}.P-p)<1e-3 ) % don't add a pressure too close to a current isobar
-            fprintf('p=%f is too close to a current isobar \n',p);
-        else
-
-            dat = get_isobar(dat, p, 8, 8); % download the isobar
-
-            if length(varargin)>3
-                    filename = varargin{4}; % Add the isobar to the database file if requested
-                    file = load(filename); % Loads the requested database from the file
-                    field = fieldnames(file); % Takes the name of the databse (Maybe it's not IND)
-
-                    % At this point, dat contains the data specific to the
-                    % compound, does not know anything about IND (E.g., IND.He)
-                    % The isobaric data is added to this structure (E.g., IND.He)
-                    % In ascending order of pressure
-                    % Now the new data is added to the entire IND database.
-                    % (field{:}) usually resolves to IND, but the name might
-                    % be different in the future, hence this format.
-                    % (dat.name) is the name of the compound, as it is in 
-                    % the IND database (E.g., He)
-                    file.(field{:}).(dat.name) = dat;
-
-                    % And now the data loaded from file is saved onto a 
-                    % Separate variable. This is needed because the save
-                    % function of matlab does not like working with structure
-                    % field names.
-                    % This name, here IND, is the one that will be used when the
-                    % structure is loaded once again in the future
-                    IND = file.(field{:});
-
-                    % Saves the database to the requested filename
-                    % The content of the files should now be the previous
-                    % database, as it was before, plus the new isobar
-                    % NOTE: the name of the file can by anything, the
-                    % load function will still load the structure
-                    % as "IND". So, load('new_database.mat') will still
-                    % load everything as "IND", because that's the second
-                    % parameter of "save".
-                    save(filename, 'IND');
-
-                    % The following command loads the file to the base
-                    % workspace, in order to be used in the next call
-                    % evalin( 'base', 'load(filename)' );
-            end
-        end
-        ret=dat;
     case 'minp'
         ret=dat.isoP{1}.P;
+        
     case 'maxp'
         ret=dat.isoP{end}.P;
+        
     case 'mint'
         ret=dat.isoP{1}.T(1);
+        
     case 'maxt'
         ret=dat.isoP{1}.T(end);
+        
     otherwise
         error('Unknown input parameter');
 end
