@@ -40,7 +40,7 @@ isobars7 = 300:100:700;
 iso1 = [isobars1 isobars2 isobars3 isobars4 isobars5 isobars6 isobars7];
 iso2 = [isobars1 isobars2 isobars3 isobars4 isobars5];
     
-if isempty(varargin) || (istr(varargin) && strcmpi(varargin{1},'all'))
+if isempty(varargin) || (ischar(varargin{1}) && strcmpi(varargin{1},'all'))
     
     % Stopper in case of you missed something
     sure = input('ARE YOU SURE TO GO ON DOWNLOADING ALL DATA ?? \n');
@@ -48,10 +48,9 @@ if isempty(varargin) || (istr(varargin) && strcmpi(varargin{1},'all'))
         return
     end
     
-    species =  { %'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6'...
-                % 'C2H4' 'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14'...
-                % 'C6H12' 'C6H6' 
-                'NH3' 'He' 'O2' 'R134a'};
+    species =  {'H2O' 'N2' 'H2' 'CO' 'CO2' 'N2O' 'CH4O' 'CH4' 'C2H6'...
+                'C2H4' 'C3H8' 'C3H6' 'C3H4' 'C4H10' 'C5H12' 'C6H14'...
+                'C6H12' 'C6H6' 'NH3' 'He' 'O2' 'R134a' 'pH2'};
     
     % Shout-out to Alessandro Rampazzo
     %              H2O        %N2       %H2        CO       CO2       N2O
@@ -60,8 +59,8 @@ if isempty(varargin) || (istr(varargin) && strcmpi(varargin{1},'all'))
         'C67561' 'C74828' 'C74840' 'C74851' 'C74986' 'C115071' 'C74997'...
         ...%C4H10   C5H12     C6H14     C6H12     C6H6       NH3
         'C106978' 'C109660' 'C110543' 'C110827' 'C71432'  'C7664417'...
-        ...%He         O2     R134a(C2H2F4)
-        'C7440597' 'C7782447' 'C811972'}; %
+        ...%He         O2     R134a(C2H2F4)  pH2 (para-H2)
+        'C7440597' 'C7782447'   'C811972'     'B5000001'}; 
     
 
     
@@ -74,24 +73,24 @@ if isempty(varargin) || (istr(varargin) && strcmpi(varargin{1},'all'))
         C_MM*3+H_MM*8, C_MM*3+H_MM*6, C_MM*3+H_MM*4, C_MM*4+H_MM*10,...
         ...%  C5H12            C6H14         C6H12             C6H6
         C_MM*5+H_MM*12, C_MM*6 + H_MM*14, C_MM*6+H_MM*12, C_MM*6+H_MM*6,...
-        ...%  NH3     He     O2          R134a(C2H2F4)
-        N_MM+H_MM*3, He_MM, O_MM*2, C_MM*2+H_MM*2+F_MM*4];
+        ...%  NH3     He     O2          R134a(C2H2F4)   pH2 (para-H2)
+        N_MM+H_MM*3, He_MM, O_MM*2, C_MM*2+H_MM*2+F_MM*4  H_MM*2];
     
           %H2O   %N2   %H2   CO    CO2    N2O  CH4O   CH4   C2H6   C2H4
     Ref ={Ref3  Ref4  Ref1  Ref1  Ref2   Ref1  Ref1   Ref1  Ref1   Ref1 ...
         ...%  C3H8   C3H6    C3H4   C4H10  C5H12  C6H14  C6H12  C6H6
               Ref2   Ref2    Ref2    Ref2   Ref1   Ref1  Ref1   Ref1  ...
-        ...%  NH3     He     O2   R134a(C2H2F4)
-              Ref5   Ref1   Ref6      Ref2};
+        ...%  NH3     He     O2   R134a(C2H2F4)  pH2 (para-H2)
+              Ref5   Ref1   Ref6      Ref2        Ref1 };
           
                %H2O   %N2   %H2    CO    CO2   N2O  CH4O   CH4   C2H6  C2H4
     isobars = { iso1, iso1, iso1, iso1, iso1, iso2, iso1, iso1, iso1, iso1, ...
       ...%  C3H8   C3H6    C3H4   C4H10  C5H12  C6H14  C6H12  C6H6
            iso1,   iso1,   iso2,  iso2,  iso2,   iso2,  iso2, iso2,  ...
-      ...%  NH3     He     O2   R134a(C2H2F4)     
-           iso1,   iso1,  iso1,    iso1}; % 
+      ...%  NH3     He     O2   R134a(C2H2F4)  pH2 (para-H2) 
+           iso1,   iso1,  iso1,     iso1,        iso1 }; 
      
-elseif (istr(varargin) && strcmpi(varargin{1},'reduced'))
+elseif (ischar(varargin{1}) && strcmpi(varargin{1},'reduced'))
     % Stopper in case of you missed something
     sure = input('ARE YOU SURE TO GO ON DOWNLOADING reduced DATA ?? \n');
     if ~strcmpi(sure,'Yes')
@@ -121,7 +120,7 @@ elseif (istr(varargin) && strcmpi(varargin{1},'reduced'))
     isobars = { iso1, iso1, iso1,  iso1,  iso1,  ...
               ...%   He     O2   R134a(C2H2F4)     
                     iso1,  iso1,    iso1}; % 
-elseif (istr(varargin) && strcmpi(varargin{1},'H2-O2'))
+elseif (ischar(varargin{1}) && strcmpi(varargin{1},'H2-O2'))
     % Stopper in case of you missed something
     sure = input('ARE YOU SURE TO GO ON DOWNLOADING H2 and O2 DATA ?? \n');
     if ~strcmpi(sure,'Yes')
@@ -143,13 +142,36 @@ elseif (istr(varargin) && strcmpi(varargin{1},'H2-O2'))
           
                 %H2    O2 
     isobars = { iso1, iso1}; 
-       
+elseif (ischar(varargin{1}) && strcmpi(varargin{1},'H2-pH2'))
+    % Stopper in case of you missed something
+    sure = input('ARE YOU SURE TO GO ON DOWNLOADING H2 and pH2 DATA ?? \n');
+    if ~strcmpi(sure,'Yes')
+        return
+    end
+    
+    species =  {'H2' 'pH2'};
+    
+    % Shout-out to Alessandro Rampazzo
+    %            %H2        pH2 
+    idcas = { 'C1333740' 'B5000001'}; ...
+    
+    %calculating every MM using element MMs
+    %      H2      % pH2      
+    MM = [H_MM*2, H_MM*2];  
+    
+          %H2    pH2
+    Ref ={Ref1  Ref1};
+          
+                %H2    pH2 
+    isobars = { iso1, iso1};    
+elseif (ischar(varargin{1}) && strcmpi(varargin{1},'Own_data'))
+    species = varargin{2};
+    MM = varargin{3};
+    idcas = varargin{4};
+    Ref = varargin{5};
+    isobars = varargin{6};
 else
-    species = varargin{1};
-    MM = varargin{2};
-    idcas = varargin{3};
-    Ref = varargin{4};
-    isobars = varargin{5};
+    error('You passed a data download case that it is not supported')
 end
 
 % Base link
