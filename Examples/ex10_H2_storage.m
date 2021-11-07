@@ -6,24 +6,21 @@ function ex10_H2_storage
 % has been estimated to be between 5 and 7 kg
 % (https://doi.org/10.1016/j.ijhydene.2019.07.044)
 
-% A tank contains 7 kg of H2 at -252.87°C and 1 atm (state 1)
+% A tank contains 7 kg of H2 as saturated liquid at 1bar (state 1)
+% (parahidrogen)
 
-% 1-State of the fluid
+% 1-Temperature of the fluid
 
 clear 
 close all
 
 fl='pH2';
 
-p1=1.01325;  % bar
-T1=-252.87+273.15; % K
+p1=1;  % bar
+T1=INIST(fl,'Tsat_p',p1); % K
 m1=7; % kg
-Tsat1=INIST(fl,'tsat_p',p1);
-if T1<Tsat1 
-    fprintf('State1 is subcooled liquid (below the saturation temperature for its pressure\n');
-else
-    error('uhh?? the rest of the code assumes state 1 is Subcooled');
-end
+
+fprintf('T1=%.2f K\n',T1);
 
 % 2-H2 density and volume of the tank
 
