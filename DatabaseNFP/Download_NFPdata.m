@@ -1,17 +1,17 @@
-% INIST - 
-% Interpolation of Nonideal Idiosyncratic Splendiferous Tables
+% NFP - 
+% Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2021
 %
-% Creating INIST database
+% Creating NFP database
 % Please note that will require some hours to download all and it do not 
 % save automatically. If your internet shut down, save IND manually and
 % start from this point adjusting this code
 % Regards, Caleb
 
 
-function Download_INISTdata(varargin)
+function Download_NFPdata(varargin)
 % MM for all and reduced case
 H_MM = 1.00794 / 1000;
 O_MM = 15.9994 / 1000;
