@@ -17,14 +17,14 @@ close all
 fl='pH2';
 
 p1=1;  % bar
-T1=INIST(fl,'Tsat_p',p1); % K
+T1=NFP(fl,'Tsat_p',p1); % K
 m1=7; % kg
 
 fprintf('T1=%.2f K\n',T1);
 
 % 2-H2 density and volume of the tank
 
-rho1=INIST(fl,'r_pT',p1,T1); % kg/m^3
+rho1=NFP(fl,'r_pT',p1,T1); % kg/m^3
 V1=m1/rho1; % m^3
 
 fprintf('State1 density is %.1f kg/m^3 and tank volume %.1f l\n',rho1,V1*1000);
@@ -61,7 +61,7 @@ q=S*100; % W heat flux
 % If the tank is rigid, the 1st Thermodynamic principle reads:
 % U2-U1 = Q 
 
-U1=m1*INIST(fl,'u_pt',p1,T1); % kJ
+U1=m1*NFP(fl,'u_pt',p1,T1); % kJ
 
 dt=10;
 
@@ -82,7 +82,7 @@ options1=optimset('tolfun',1e-11,'display','none'); % a lower tolerance has to b
 
 p2=fsolve(@htbz2,30,options1);  % find p2
 
-htbz1=@(T2) INIST(fl,'v_pt',p2,T2)-v2; % Given T2 and the current value of p2, htbz1 returns the error in specific volume
+htbz1=@(T2) NFP(fl,'v_pt',p2,T2)-v2; % Given T2 and the current value of p2, htbz1 returns the error in specific volume
 
 T2=fsolve(htbz1,30,options1); % recover T2
 
@@ -90,12 +90,12 @@ T2=fsolve(htbz1,30,options1); % recover T2
 
         % find T2 that has v2 at the given p2
         % The function has to be defined here because of the use of p2
-        htbz1=@(T2) INIST(fl,'v_pt',p2,T2)-v2;
+        htbz1=@(T2) NFP(fl,'v_pt',p2,T2)-v2;
         
         T2=fsolve(htbz1,30,options1);
         
         % find the difference to the internal energy 
-        err=INIST(fl,'u_pt',p2,T2)-u2; 
+        err=NFP(fl,'u_pt',p2,T2)-u2; 
     end
 
 % SECOND APPROACH: SOLVE BOTH EQUATIONS TOGETHER
@@ -107,8 +107,8 @@ T2=fsolve(htbz1,30,options1); % recover T2
         T=x(2);
         % Both equations errors have to be roughly of the same order of magnitude
         % So (after some tests) we multiply the first by 1e4
-        errB(1)=1e4*(INIST(fl,'v_pt',p,T)-v2); 
-        errB(2)=INIST(fl,'u_pt',p,T)-u2;
+        errB(1)=1e4*(NFP(fl,'v_pt',p,T)-v2); 
+        errB(2)=NFP(fl,'u_pt',p,T)-u2;
     end
 
     xs=fsolve(@htbzB,[40,40],options1);
@@ -118,8 +118,8 @@ T2=fsolve(htbz1,30,options1); % recover T2
 
     fprintf('p2=%e bar T2=%e K \n',p2_prime,T2_prime);
 
-    fprintf('Error in v = %e \n',INIST(fl,'v_pt',p2,T2)-v2 );
-    fprintf('Error in u = %e \n',INIST(fl,'u_pt',p2,T2)-u2 );
+    fprintf('Error in v = %e \n',NFP(fl,'v_pt',p2,T2)-v2 );
+    fprintf('Error in u = %e \n',NFP(fl,'u_pt',p2,T2)-u2 );
 
     fprintf("difference in p2=%e \n",p2-p2_prime);
     fprintf("difference in T2=%e \n",T2-T2_prime);

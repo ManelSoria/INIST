@@ -1,5 +1,5 @@
-% INIST - 
-% Interpolation of Nonideal Idiosyncratic Splendiferous Tables
+% NFP - 
+% Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2020
@@ -19,22 +19,22 @@ close all
         
 %Calcular les propietats al estat inicial 
 p1=10;%bar pressio
-h1=INIST('O2','hl_p',p1);%kJ/kg
-s1=INIST('O2','sl_p',p1);%kJ/kgK
+h1=NFP('O2','hl_p',p1);%kJ/kg
+s1=NFP('O2','sl_p',p1);%kJ/kgK
 
 %Calcul estat 2
 p2=7;%pressio en bar
 h2=h1;
-hl2=INIST('O2','hl_p',p2);
-hv2=INIST('O2','hv_p',p2);
+hl2=NFP('O2','hl_p',p2);
+hv2=NFP('O2','hv_p',p2);
 x2=(h2-hl2)/(hv2-hl2);
 if x2>1 || x2<0
     Error('ugg. This title is not valid ');
 end
 % Check that entropy increases
-T2=INIST('O2','tsat_p',p2);
-sl2=INIST('O2','sl_p',p2);
-sv2=INIST('O2','sv_p',p2);
+T2=NFP('O2','tsat_p',p2);
+sl2=NFP('O2','sl_p',p2);
+sv2=NFP('O2','sv_p',p2);
 s2=sl2+x2*(sv2-sl2);
 Inc_s=s2-s1;
 if Inc_s<0
@@ -46,16 +46,16 @@ fprintf('Delta s = %8.4f kJ/kgK \n',s2-s1);
     
 
 % Diagram
-pv = linspace(1,INIST('O2','pcrit'),40); %bar
+pv = linspace(1,NFP('O2','pcrit'),40); %bar
 
-vl_p = INIST('O2','vl_p',pv);
-vv_p = INIST('O2','vv_p',pv);
+vl_p = NFP('O2','vl_p',pv);
+vv_p = NFP('O2','vv_p',pv);
 
-v1 = INIST('O2','vl_p',p1);
+v1 = NFP('O2','vl_p',p1);
 
 
 % v2 value (inside the saturation bell !)
-v2 = INIST('O2','vl_p',p2) + x2*(INIST('O2','vv_p',p2)-INIST('O2','vl_p',p2));
+v2 = NFP('O2','vl_p',p2) + x2*(NFP('O2','vv_p',p2)-NFP('O2','vl_p',p2));
 
 fprintf('Specific volume at the exit = %8.4f m^3/kg \n',v2);
 

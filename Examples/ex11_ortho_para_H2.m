@@ -14,7 +14,7 @@ close all
 % whole lot right back to the gaseous state. All without the help of any 
 % heat leaking in from the outside
 
-% Verify these claims using INIST and the comment in the book
+% Verify these claims using NFP and the comment in the book
 % Thermodynamic properties of cryogenic fluids by Jacobsen, 
 % Richard T. Leachman, Jacob W. Lemmon, Eric W. Penoncello, Steven G 
 % "For all comparisons and mixing with parahydrogen, the reference enthalpy 
@@ -23,12 +23,12 @@ close all
 
 % First we find the saturation temperatures at 1atm
 P=1.013; % bar
-T1p=INIST('pH2','tsat_p',P)
-T1o=INIST('H2','tsat_p',P)
+T1p=NFP('pH2','tsat_p',P)
+T1o=NFP('H2','tsat_p',P)
 
 % Now, we check the enthalpy values for both substances as sat liquid, 1atm
-H1p=INIST('pH2','hl_p',P) % kJ/kg
-H1o=INIST('H2','hl_p',P) % kJ/kg
+H1p=NFP('pH2','hl_p',P) % kJ/kg
+H1o=NFP('H2','hl_p',P) % kJ/kg
 
 % We see that both are close to zero, while according to J.D.Clark the
 % difference should be significant. The answer of course is that for each
@@ -53,7 +53,7 @@ Qop=0.75*Qop
 
 % Next check is the vaporization heat of 2 g for the para form:
 
-Qvap=2e-3*(INIST('pH2','hv_p',P)-INIST('pH2','hl_p',P) )*0.239*1000
+Qvap=2e-3*(NFP('pH2','hv_p',P)-NFP('pH2','hl_p',P) )*0.239*1000
 
 % also very close 
 

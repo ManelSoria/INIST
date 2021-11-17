@@ -1,5 +1,5 @@
-% INIST - 
-% Interpolation of Nonideal Idiosyncratic Splendiferous Tables
+% NFP - 
+% Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2020
@@ -11,7 +11,7 @@ clearvars
 close all
 
 isobarV=[4 6 8 10 ];
-INIST_plotisobar('C3H8',isobarV);
+NFP_plotisobar('C3H8',isobarV);
  set(gca,'FontSize',18)
 
  % add plot legend
