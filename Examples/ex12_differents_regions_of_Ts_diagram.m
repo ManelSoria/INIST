@@ -6,18 +6,27 @@
 %
 % Plot isobar 
 close all
-NFP_plotisobar('H2',1,'b')
-NFP_plotisobar('H2',30,'k')
-xlim([-10 30])
-ylim([0 50])
+
+
+P1=1; T1=16;                    s1=NFP('H2','s_pt',P1,T1);
+P2=1; T2=NFP('H2','tsat_p',P2); s2=NFP('H2','sl_p',P2);
+P3=1; T3=NFP('H2','tsat_p',P2); s3=NFP('H2','sv_p',P3);
+P4=1; T4=30;                    s4=NFP('H2','s_pt',P4,T4);
+
+P5=40; T5=40;                   s5=NFP('H2','s_pt',P5,T5);
+NFP_plotisobar('H2',P1,'b',2)
+NFP_plotisobar('H2',P5,'k',2)
+
+SZ=120;
+
 hold on
-sliquid = NFP('H2','s_pt',1,16)
-svapor = NFP('H2','s_pt',1,40)
-sliquidsat = NFP('H2','sl_p',1)
-svaporsat = NFP('H2','sv_p',1)
-tsat = NFP('H2','tsat_p',1)
-scatter(sliquid,16,50,'oc','filled')
-scatter(sliquidsat,tsat,50,'og','filled')
-scatter(svaporsat,tsat,50,'ok','filled')
-scatter(svapor,40,50,'om','filled')
-legend('1 bar isobar','Saturation bell','','30 bar isobar','','','Liquid T=12','Liquid saturated','Vapor saturated','Vapor T=40')
+
+scatter(s1,T1,SZ,'ob','filled')
+scatter(s2,T2,SZ,'og','filled')
+scatter(s3,T3,SZ,'ok','filled')
+scatter(s4,T4,SZ,'om','filled')
+scatter(s5,T5,SZ,'or','filled')
+legend({'Subcritical isobar','Saturation bell','','Supercritical isobar','','','Subcooled liquid','Saturated liquid','Saturated vapor','Overheated vapor','Supercritical'},'Location','NW')
+xlim([-10 30])
+ylim([12 50])
+set(gca,'FontSize',18)

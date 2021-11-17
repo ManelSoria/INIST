@@ -28,16 +28,25 @@ catch
     error('%s not found',dat)
 end
 
+switch numel(varargin)
+    case 0
+        color='k';
+        thickness=1;
+    case 1
+        color=varargin{1};
+        thickness=1;
+    case 2
+        color=varargin{1};
+        thickness=varargin{2};
+    otherwise
+        error('uhh too many arguments');
+end
 
 for j=1:length(pv)% plot isobar number j
    ok = 0;
    for  ii=1:length(IND.(dat).isoP)
        if IND.(dat).isoP{ii}.P==pv(j)
-           if numel(varargin)>0
-               plot(IND.(dat).isoP{ii}.s,IND.(dat).isoP{ii}.T,varargin{1});
-           else
-               plot(IND.(dat).isoP{ii}.s,IND.(dat).isoP{ii}.T);               
-           end
+           plot(IND.(dat).isoP{ii}.s,IND.(dat).isoP{ii}.T,color,'LineWidth',thickness);
            hold on
            ok = 1;
            break;
@@ -65,11 +74,7 @@ for j=1:length(pv)% plot isobar number j
            S = (Snext - Sprev) ./ (Pnext -Pprev) .* (pv(j) - Pprev) + Sprev;
            T = (Tnext+Tprev)/2;
            
-           if numel(varargin)>0
-               plot(S,T,varargin{1});
-           else
-               plot(S,T);
-           end
+           plot(S,T,color,'LineWidth',thickness);
            hold on
            ok = 1;
            break;
@@ -81,8 +86,8 @@ for j=1:length(pv)% plot isobar number j
 end
 
 % plot saturation bell
-plot(IND.(dat).sl,IND.(dat).Tsat,'r');
-plot(IND.(dat).sv,IND.(dat).Tsat,'r');
+plot(IND.(dat).sl,IND.(dat).Tsat,'r','LineWidth',thickness);
+plot(IND.(dat).sv,IND.(dat).Tsat,'r','LineWidth',thickness);
 
 
 title(IND.(dat).name);
