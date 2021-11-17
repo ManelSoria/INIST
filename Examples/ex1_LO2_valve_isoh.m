@@ -70,4 +70,5 @@ semilogx(v2,p2,'ob','Linewidth',2);
 semilogx([v1 v2],[p1 p2],'k','Linewidth',2);
 xlabel('v','Fontsize',14);
 ylabel('p','Fontsize',14);
-set(gca,'Fontsize',12)
+title('O2 isoenthalpic expansion')
+set(gca,'Fontsize',18)

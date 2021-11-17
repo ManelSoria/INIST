@@ -5,14 +5,15 @@ function NFP_plotisobar(dat,pv,varargin)
 % Data downloaded from NIST web page 
 % ESEIAAT - UPC - 2014-2020
 %
-% NFP_plotisobar(dat,p,color)
+% NFP_plotisobar(dat,p,color,thickness)
 % NFP_plotisobar:  plot isobar vector
-% dat: data
+% dat: species
 % p: isobar vector
 % color (optional): isobar colors 
+% thickness (optional): line thickness
 %
 % examples:
-% NFP_plotisobar('N2',[10,20],'k')
+% NFP_plotisobar('N2',[10,20],'k',2)
 
 global IND
 
