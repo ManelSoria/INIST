@@ -1,4 +1,3 @@
-function ex4_combustion_C3H8
 % NFP - 
 % Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
@@ -47,6 +46,4 @@ Hin=np(1)*hO2+np(4)*hC3H8
 
 [Tp,~,~,~] = HGStp(species,np,'H',Hin,P0)
 
-
-end
 
