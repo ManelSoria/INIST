@@ -1,10 +1,10 @@
-% INIST - 
-% Interpolation of Nonideal Idiosyncratic Splendiferous Tables
+% NFP - 
+% Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2020
 %
-% example: check INIST against XSteam, for water
+% example: check NFP against XSteam, for water
 % Requires XSteam, it can be downloaded from Mathworks File Exchange
 % Remember to use addpath 
 
@@ -19,7 +19,7 @@ for j=1:length(pv)
         for i=1:length(tv)
             t=tv(i);
             sX(i)=XSteam('s_pt',pv(j),t);
-            sI(i)=INIST('H2O','s_pt',pv(j),t+273.15);
+            sI(i)=NFP('H2O','s_pt',pv(j),t+273.15);
         end
 
         plot(sX,tv,'r-','LineWidth',2);
@@ -30,6 +30,6 @@ end
 
 ylabel('Temperature (oC)')
 xlabel('Entropy (kJ/kgK)')
-title('H2O Ts diagram for several pressures; XSteam (red) vs. INIST (blue) ')
+title('H2O Ts diagram for several pressures; XSteam (red) vs. NFP (blue) ')
 
 set(gca,'FontSize',18)

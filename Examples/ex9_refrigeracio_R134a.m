@@ -1,5 +1,5 @@
-% INIST - 
-% Interpolation of Nonideal Idiosyncratic Splendiferous Tables
+% NFP - 
+% Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2020
@@ -31,33 +31,33 @@ plow=2.4; % bar
 phigh=7;
 mp=0.1; % kg/s
 
-INIST_plotisobar('R134a',[plow,phigh]);
+NFP_plotisobar('R134a',[plow,phigh]);
 
 p1=plow;
-T1=INIST('R134a','tsat_p',p1);
-s1=INIST('R134a','sv_p',p1);
-h1=INIST('R134a','hv_p',p1);
+T1=NFP('R134a','tsat_p',p1);
+s1=NFP('R134a','sv_p',p1);
+h1=NFP('R134a','hv_p',p1);
 plot(s1,T1,'or');
 
 p2=phigh;
 s2=s1;
-T2=INIST('R134a','t_ps',p2,s2);
-h2=INIST('R134a','h_pt',p2,T2);
+T2=NFP('R134a','t_ps',p2,s2);
+h2=NFP('R134a','h_pt',p2,T2);
 plot(s2,T2,'or');
 
 p3=phigh;
-T3=INIST('R134a','tsat_p',p3);
-s3=INIST('R134a','sl_p',p3);
-h3=INIST('R134a','hl_p',p3);
+T3=NFP('R134a','tsat_p',p3);
+s3=NFP('R134a','sl_p',p3);
+h3=NFP('R134a','hl_p',p3);
 plot(s3,T3,'or');
 
 p4=plow;
 h4=h3;
-T4=INIST('R134a','tsat_p',p4);
-hl=INIST('R134a','hl_p',p4);
-hv=INIST('R134a','hv_p',p4);
-sl=INIST('R134a','sl_p',p4);
-sv=INIST('R134a','sv_p',p4);
+T4=NFP('R134a','tsat_p',p4);
+hl=NFP('R134a','hl_p',p4);
+hv=NFP('R134a','hv_p',p4);
+sl=NFP('R134a','sl_p',p4);
+sv=NFP('R134a','sv_p',p4);
 x4=(h4-hl)/(hv-hl);
 s4=sl+x4*(sv-sl);
 plot(s4,T4,'or');

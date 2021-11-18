@@ -1,5 +1,5 @@
-% INIST - 
-% Interpolation of Nonideal Idiosyncratic Splendiferous Tables
+% NFP - 
+% Non-ideal Fluid Properties (previously INIST)
 % (c) Manel Soria, Caleb Fuster, Lorenzo Frezza
 % Data downloaded from NIST web page
 % ESEIAAT - UPC - 2014-2020
@@ -38,7 +38,7 @@ T3=fsolve(@hastobezero,T3)
 
 
 %%%%% NEED add_p
-INIST_plotisobar(IND.N2,pvec);
+NFP_plotisobar(IND.N2,pvec);
 %%%%%
 
 % save('IND','IND');
@@ -67,19 +67,19 @@ hh=h3;
 is=[];
 iT=[];
 for i=1:length(ipres)
-    if ipres(i)<INIST(IND.N2,'pcrit')
-        hl=INIST('N2','hl_p',ipres(i));
-        hv=INIST('N2','hv_p',ipres(i));
-        sl=INIST('N2','sl_p',ipres(i));
-        sv=INIST('N2','sv_p',ipres(i));
+    if ipres(i)<NFP(IND.N2,'pcrit')
+        hl=NFP('N2','hl_p',ipres(i));
+        hv=NFP('N2','hv_p',ipres(i));
+        sl=NFP('N2','sl_p',ipres(i));
+        sv=NFP('N2','sv_p',ipres(i));
         xx=(hh-hl)/(hv-hl);
         is(i)=sl+xx*(sv-sl);
-        iT(i)=INIST(IND.N2,'tsat_p',ipres(i));
+        iT(i)=NFP(IND.N2,'tsat_p',ipres(i));
     else
-        eq=@(Tx) INIST('N2','h_pt',ipres(i),Tx)-hh;
+        eq=@(Tx) NFP('N2','h_pt',ipres(i),Tx)-hh;
         tt=fsolve(eq,T3,optimset('Display','none'));
         iT(i)=tt;
-        is(i)=INIST('N2','s_pt',ipres(i),tt);
+        is(i)=NFP('N2','s_pt',ipres(i),tt);
     end
 end
 plot(is,iT,'r')
@@ -102,19 +102,19 @@ plot(is,iT,'r')
 
         % point 3: end of regenerative cooling
         p3=p2;
-        h3=INIST('N2','h_pt',p3,T3);
-        s3=INIST('N2','s_pt',p3,T3);
+        h3=NFP('N2','h_pt',p3,T3);
+        s3=NFP('N2','s_pt',p3,T3);
         qi=mg*(h3-h2)
 
 
         % point 4: end of isoenthalpic expansion
         p4=plow;
-        T4=INIST('N2','tsat_p',p4);
+        T4=NFP('N2','tsat_p',p4);
         h4=h3;
-        hl=INIST('N2','hl_p',p4);
-        hv=INIST('N2','hv_p',p4);
-        sv=INIST('N2','sv_p',p4);
-        sl=INIST('N2','sl_p',p4);
+        hl=NFP('N2','hl_p',p4);
+        hv=NFP('N2','hv_p',p4);
+        sv=NFP('N2','sv_p',p4);
+        sl=NFP('N2','sl_p',p4);
 
         x4=(h4-hl)/(hv-hl)
         s4=sl+x4*(sv-sl);
